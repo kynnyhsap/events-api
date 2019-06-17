@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/tobira-show/dou-events-parser"
+	"github.com/tobira-shoe/dou-events-parser"
 	"net/http"
 )
 
 func GetTags(c echo.Context) error {
-	err, tags := parser.ScrapEventTags()
+	err, tags := parser.ParseEventTags()
 
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "")
