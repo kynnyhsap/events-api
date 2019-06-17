@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/tobira-show/dou-parser"
+	"github.com/tobira-show/dou-events-parser"
 	"net/http"
 )
 

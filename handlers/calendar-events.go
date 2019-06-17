@@ -2,13 +2,13 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/tobira-show/dou-parser"
+	"github.com/tobira-shoe/dou-events-parser"
 	"net/http"
 	"strconv"
 )
 
 func GetEvent(c echo.Context) error {
-	err, list := parser.ScrapCalendarEvents()
+	err, list := parser.ParseCalendarEvents()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -24,7 +24,7 @@ func GetEvent(c echo.Context) error {
 }
 
 func GetEventsList(c echo.Context) error {
-	err, list := parser.ScrapCalendarEvents()
+	err, list := parser.ParseCalendarEvents()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
