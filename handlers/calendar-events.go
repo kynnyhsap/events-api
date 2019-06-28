@@ -1,36 +1,36 @@
 package handlers
 
 import (
+	"events-api/sotrage"
 	"github.com/labstack/echo/v4"
-	"github.com/tobira-shoe/dou-events-parser"
 	"net/http"
 	"strconv"
 )
 
-func GetEvent(c echo.Context) error {
-	err, list := parser.ParseCalendarEvents()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-
-	id, _ := strconv.Atoi(c.Param("id"))
-	for _, event := range list {
-		if event.ID == id {
-			return c.JSON(http.StatusOK, event)
+func GetEvent(db storage.Storage) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id, _ := strconv.Atoi(c.Param("id"))
+		event, err := db.GetEvent(id)
+		if err != nil {
+			return c.String(http.StatusNotFound, "Event not found?")
 		}
-	}
 
-	return c.String(http.StatusNotFound, "Event not found")
+		return c.JSON(http.StatusOK, event)
+	}
 }
 
-func GetEventsList(c echo.Context) error {
-	err, list := parser.ParseCalendarEvents()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+func GetEventsList(db storage.Storage) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		limit, _ := strconv.Atoi(c.QueryParam("limit"))
+		offset, _ := strconv.Atoi(c.QueryParam("offset"))
+
+		// todo: tags
+
+		list, err := db.GetEventsList(limit, offset, []string{})
+		if err != nil {
+			return c.String(http.StatusInternalServerError, "")
+		}
+
+		return c.JSON(http.StatusOK, list)
 	}
-
-	limit, _ := strconv.Atoi(c.QueryParam("limit"))
-	offset, _ := strconv.Atoi(c.QueryParam("offset"))
-
-	return c.JSON(http.StatusOK, list[offset:offset+limit])
 }
